@@ -1,0 +1,114 @@
+<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aura Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{min-height:100vh;background:#0a0618 url('bg.jpg') center/cover fixed;font-family:Inter;color:#fff;padding-bottom:95px}.wrap{max-width:410px;margin:0 auto;padding:14px 14px 0}.topText{text-align:center;letter-spacing:5px;color:#b084ff;text-shadow:0 0 12px #b084ff;font-size:13px;font-weight:600;margin-bottom:14px}.card{background:linear-gradient(180deg, rgba(215,195,255,0.16), rgba(75,50,130,0.30));backdrop-filter:blur(22px);border:1px solid rgba(210,180,255,0.32);border-radius:26px;padding:18px 20px;margin-bottom:14px}.c1{display:flex;align-items:center;gap:16px}.ico{width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #e9d5ff, #a855f7 45%, #4c1d95 75%);display:flex;align-items:center;justify-content:center;font-size:26px}.wName{font-size:21px;font-weight:800}.wLvl{font-size:13px;color:#c4b5fd;margin-top:3px}.c2{display:flex;align-items:center;gap:18px}.ball{width:64px;height:64px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff 0%, #c084fc 18%, #7c3aed 42%, #3b1a6b 78%);box-shadow:0 0 22px #7c3aed}.big{font-size:42px;font-weight:800;line-height:1;margin:4px 0}.mut{font-size:12px;color:#b9a8d6}.pTitle{font-size:20px;font-weight:800}.pSub{font-size:13px;color:#a89bc7;margin-top:6px}.barOut{margin-top:16px;height:26px;background:rgba(0,0,0,0.42);border:1px solid rgba(180,140,255,0.28);border-radius:100px;position:relative;overflow:hidden}.barIn{height:100%;width:0%;background:linear-gradient(90deg,#b07cff,#7c3aed);transition:width.8s}.barPct{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:12px;color:#e9d5ff}.task{display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,0.35);border:1px solid rgba(168,85,247,0.28);border-radius:16px;padding:13px 14px;margin-top:10px}.task b{font-size:14px}.task small{font-size:11px;color:#a89bc7;display:block}.task button{padding:8px 16px;border-radius:20px;background:linear-gradient(#8b5cf6,#7c3aed);border:1px solid #a78bfa;color:#fff;font-size:12px;font-weight:700;cursor:pointer}.task.done{opacity:.45}.viewBtn{width:100%;height:56px;border-radius:100px;background:linear-gradient(180deg,#8b7cff,#6d5cff);border:1px solid rgba(255,255,255,0.35);color:#fff;font-size:18px;font-weight:800;box-shadow:0 0 26px rgba(109,92,255,0.7);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:12px}.profilePill{display:inline-flex;padding:10px 24px;border-radius:100px;background:rgba(40,25,80,.6);border:1px solid rgba(180,140,255,.5);box-shadow:0 0 18px rgba(139,92,246,.5);font-size:22px;font-weight:800;margin-bottom:14px}.profileMain{padding:20px;display:flex;gap:16px;align-items:center}.avatarWrap{width:88px;height:88px;border-radius:50%;background:radial-gradient(circle at 35% 35%, rgba(255,255,255,.15), rgba(60,30,110,.8));border:1px solid rgba(210,180,255,.4);display:flex;align-items:center;justify-content:center;position:relative}.avatarInner{width:76px;height:76px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #6d4bc0, #3a2268);display:flex;align-items:center;justify-content:center}.avatarInner svg{width:52px;height:52px;fill:#a78bfa}.avatarBadge{position:absolute;right:-2px;bottom:4px;width:34px;height:34px;border-radius:50%;background:linear-gradient(#b8a0ff,#7c5cff);border:2px solid #1e1440;display:flex;align-items:center;justify-content:center}.miniBar{margin-top:6px;height:6px;background:rgba(0,0,0,.45);border-radius:100px;overflow:hidden;width:100%}.miniBarFill{height:100%;background:linear-gradient(90deg,#b07cff,#7c3aed)}.menuItem{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(180deg, rgba(60,45,110,.45), rgba(35,25,65,.55));border:1px solid rgba(180,140,255,.28);border-radius:18px;padding:14px 16px;margin-bottom:12px;cursor:pointer}.menuLeft{display:flex;align-items:center;gap:14px}.menuIcon{width:46px;height:46px;border-radius:50%;background:radial-gradient(circle at 35% 35%, rgba(140,110,200,.5), rgba(50,30,90,.9));border:1px solid rgba(200,180,255,.25);display:flex;align-items:center;justify-content:center}.menuIcon svg{width:24px;height:24px;stroke:#c4b5fd;fill:none;stroke-width:1.6}.menuItem b{font-size:17px;font-weight:600;color:#e9ddff}.menuItem.logout b{color:#ff9abb}.arrow{color:#7a6ca0;font-size:20px}#editModal{position:fixed;inset:0;z-index:201;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.65);backdrop-filter:blur(12px);padding:16px}.editBox{width:100%;max-width:380px;background:#1c1635;border:1px solid rgba(200,180,255,.3);border-radius:22px;padding:18px}.pInput{width:100%;height:46px;background:rgba(0,0,0,.4);border:1px solid rgba(180,140,255,.28);border-radius:12px;color:#fff;padding:0 14px;margin-top:8px;outline:none}.pLabel{font-size:12px;color:#b9a8d6;margin-top:12px;display:block}.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:92%;max-width:410px;background:rgba(30,20,60,0.88);backdrop-filter:blur(22px);border:1px solid rgba(190,160,255,0.32);border-radius:22px;display:flex;justify-content:space-around;padding:12px 0 10px;z-index:99}.nav div{display:flex;flex-direction:column;align-items:center;gap:3px;color:#8b7aa8;font-size:12px;cursor:pointer}.nav div.active{color:#a78bfa}.nav i{font-size:22px;font-style:normal}.tab{display:none}.tab.active{display:block}
+</style></head><body>
+<div class="wrap"><div class="topText">NOWSHINEYOURAURA</div>
+<div id="tab-home" class="tab active"><div class="card c1"><div class="ico">✦</div><div><div class="wName" id="wName">Welcome, User</div><div class="wLvl" id="wLvl">Level 1</div></div></div><div class="card c2"><div class="ball"></div><div><div style="font-size:18px;font-weight:600">Total Aura</div><div class="big" id="total">0</div><div class="mut">Your total aura balance</div></div></div><div class="card"><div class="pTitle">Level Progress</div><div class="pSub" id="pSub"></div><div class="barOut"><div class="barIn" id="barIn"></div><div class="barPct" id="barPct">0%</div></div></div><div class="card" id="taskBoxHome"></div><button class="viewBtn" onclick="location.href='aura-card.html'">✦ View Your Aura Card ›</button></div>
+<div id="tab-tasks" class="tab"><div class="card" style="padding:16px 20px"><div class="pTitle">Tasks</div><div class="pSub">Admin adds tasks & aura points</div></div><div class="card" id="taskBox"></div><button class="viewBtn" onclick="location.href='aura-card.html'">✦ View Your Aura Card ›</button></div>
+<div id="tab-profile" class="tab"><div class="profilePill">Profile</div><div class="card profileMain"><div class="avatarWrap"><div class="avatarInner"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 20c0-4 3.5-7 7-7s7 3 7 7" opacity=".8"/></svg></div><div class="avatarBadge">👤</div></div><div style="flex:1"><b id="pName" style="font-size:21px;font-weight:800">Welcome User</b><div style="font-size:14px;color:#a89bc7;margin-top:4px">Level <span id="pLevel" style="color:#a78bfa;font-weight:800">1</span> • Total Aura <span id="pAura" style="color:#a78bfa;font-weight:800">0</span> ✨</div><div style="font-size:13px;color:#b9a8d6;margin-top:10px">Aura</div><div class="miniBar"><div id="pFill" class="miniBarFill" style="width:0%"></div></div><div style="font-size:12px;color:#7a6ca0;margin-top:6px" id="pNext"></div></div></div><div class="menuItem" onclick="openEdit()"><div class="menuLeft"><div class="menuIcon"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div><b>Edit Profile</b></div><div class="arrow">›</div></div><div class="menuItem" onclick="location.href='aura-card.html'"><div class="menuLeft"><div class="menuIcon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 19l3-3 8-8a2 2 0 0 0 0-3 2 2 0 0 0-3 0l-8 8-3 3 3 3z"/></svg></div><b>My Aura Cards</b></div><div class="arrow">›</div></div><div class="menuItem" onclick="openSettings()"><div class="menuLeft"><div class="menuIcon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0.33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 9 15a1.65 1.65 0 0 0-1-1.51V13a2 2 0 0 1 4 0v.49c.38.23.77.38 1.15.5z"/></svg></div><b>Settings</b></div><div class="arrow">›</div></div><div class="menuItem logout" onclick="logout()"><div class="menuLeft"><div class="menuIcon"><svg viewBox="0 0 24 24" style="stroke:#ff9abb"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><path d="M12 2v7"/></svg></div><b style="color:#ff9abb">Logout</b></div><div class="arrow">›</div></div></div></div>
+<div class="nav"><div id="nav-home" class="active" onclick="goTab('home')"><i>⌂</i>Home</div><div id="nav-tasks" onclick="goTab('tasks')"><i>☰</i>Tasks</div><div id="nav-profile" onclick="goTab('profile')"><i>👤</i>Profile</div></div>
+<div id="editModal" onclick="if(event.target==this) closeEdit()"><div class="editBox"><h3 style="font-size:18px;font-weight:800">Edit Profile</h3><label class="pLabel">Full Name</label><input id="eName" class="pInput"><label class="pLabel">Username</label><input id="eUser" class="pInput" disabled style="opacity:.5"><label class="pLabel">Mobile No</label><input id="eMobile" class="pInput" type="tel"><label class="pLabel">Password</label><input id="ePass" class="pInput" type="password"><button class="viewBtn" style="height:48px;margin-top:16px" onclick="saveProfile()">Save Changes</button><button class="viewBtn" style="height:48px;background:rgba(255,255,255,.1);box-shadow:none;margin-top:8px" onclick="closeEdit()">Cancel</button></div></div>
+
+<script type="module">
+import { db, doc, getDoc, getDocs, setDoc, updateDoc, collection } from "./firebase.js";
+
+let cur = JSON.parse(localStorage.getItem('aura_current')||'null');
+if(!cur ||!cur.username){ location.href='index.html'; }
+
+let stat = {total:0, level:1, xp:0, done:[]};
+let tasks = [];
+
+function need(lv){ return 1000 + (lv-1)*250; }
+
+async function loadData(){
+  try{
+    let userSnap = await getDoc(doc(db, "users", cur.username));
+    if(userSnap.exists()){
+      let d = userSnap.data();
+      stat.total = d.total||0;
+      stat.level = d.level||1;
+      stat.xp = d.xp||0;
+      stat.done = d.done||[];
+      cur.name = d.name||cur.name;
+      cur.mobile = d.mobile||'';
+      cur.pass = d.pass||'';
+    }
+    let taskSnap = await getDocs(collection(db, "tasks"));
+    tasks = [];
+    taskSnap.forEach(t=> tasks.push(t.data()));
+    if(tasks.length===0){ tasks=[{id:1,t:"Morning Meditation",xp:50},{id:2,t:"Drink 3L Water",xp:40},{id:3,t:"Workout 30 min",xp:80}]; }
+    render();
+  }catch(e){ console.error(e); }
+}
+
+function render(){
+  let n=need(stat.level); let pct=Math.min(100, Math.floor((stat.xp/n)*100));
+  document.getElementById('wName').textContent='Welcome, '+cur.name.split(' ')[0];
+  document.getElementById('wLvl').textContent='Level '+stat.level;
+  document.getElementById('total').textContent=stat.total;
+  document.getElementById('pSub').textContent=`${stat.xp}/${n} XP to Level ${stat.level+1} • ${pct}%`;
+  document.getElementById('barIn').style.width=pct+'%';
+  document.getElementById('barPct').textContent=pct+'%';
+  document.getElementById('pName').textContent='Welcome '+(cur.name||'User');
+  document.getElementById('pLevel').textContent=stat.level;
+  document.getElementById('pAura').textContent=stat.total;
+  document.getElementById('pFill').style.width=pct+'%';
+  document.getElementById('pNext').textContent=`${stat.xp} / ${n} to Level ${stat.level+1}`;
+  let html=tasks.map(x=>{
+    let d=stat.done.includes(x.id);
+    return `<div class="task ${d?'done':''}"><div><b>${x.t}</b><small>+${x.xp} Aura</small></div><button onclick="completeTask(${x.id})">${d?'Done ✓':'Complete'}</button></div>`;
+  }).join('');
+  document.getElementById('taskBox').innerHTML=html;
+  document.getElementById('taskBoxHome').innerHTML=html;
+}
+
+window.completeTask = async function(id){
+  if(stat.done.includes(id)) return;
+  let t=tasks.find(a=>a.id===id); if(!t) return;
+  stat.done.push(id);
+  stat.xp+=t.xp; stat.total+=t.xp;
+  while(stat.xp>=need(stat.level)){ stat.xp-=need(stat.level); stat.level++; }
+  render();
+  await updateDoc(doc(db, "users", cur.username), {
+    total: stat.total, level: stat.level, xp: stat.xp, done: stat.done
+  });
+  if(stat.level>=999){
+    await setDoc(doc(db, "requests", cur.username), {name:cur.name, username:cur.username, email:cur.email||'', level:stat.level, time:Date.now()});
+  }
+}
+
+window.goTab = function(n){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.nav div').forEach(d=>d.classList.remove('active'));
+  document.getElementById('tab-'+n).classList.add('active');
+  document.getElementById('nav-'+n).classList.add('active');
+}
+window.openEdit = function(){
+  document.getElementById('eName').value=cur.name;
+  document.getElementById('eUser').value=cur.username;
+  document.getElementById('eMobile').value=cur.mobile||'';
+  document.getElementById('ePass').value=cur.pass||'';
+  document.getElementById('editModal').style.display='flex';
+}
+window.closeEdit = function(){ document.getElementById('editModal').style.display='none'; }
+window.saveProfile = async function(){
+  let newName=document.getElementById('eName').value.trim();
+  let newMobile=document.getElementById('eMobile').value.trim();
+  let newPass=document.getElementById('ePass').value.trim();
+  cur.name=newName||cur.name; cur.mobile=newMobile; cur.pass=newPass;
+  localStorage.setItem('aura_current', JSON.stringify(cur));
+  await updateDoc(doc(db, "users", cur.username), {name:cur.name, mobile:cur.mobile, pass:cur.pass});
+  alert('✅ Saved to Firebase'); closeEdit(); render();
+}
+window.openSettings = function(){
+  let msg=`Hi Admin, Help\nName:${cur.name}\nMobile:${cur.mobile}\nLevel:${stat.level} Aura:${stat.total}`;
+  window.open(`https://wa.me/917033199840?text=${encodeURIComponent(msg)}`,'_blank');
+}
+window.logout = function(){
+  if(confirm('Logout?')){ localStorage.removeItem('aura_current'); location.href='index.html'; }
+}
+
+loadData();
+</script>
+</body></html>

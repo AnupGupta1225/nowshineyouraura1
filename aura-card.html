@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Aura Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Inter:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080412;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;color:#fff}
+.back{width:100%;max-width:400px;color:#a78bfa;font-size:13px;margin:8px 0;cursor:pointer}
+.title{font-family:Orbitron;letter-spacing:3px;font-size:18px;margin-bottom:12px}
+.cardWrap{width:100%;max-width:400px;aspect-ratio:1.58/1;position:relative;border-radius:16px;overflow:hidden;background:#000;box-shadow:0 0 30px rgba(168,85,247,.6)}
+.cardWrap img.bg{width:100%;height:100%;object-fit:cover;display:block;position:absolute;inset:0;z-index:1}
+.ov{position:absolute;inset:0;z-index:10}
+.style{position:absolute;top:6%;left:5%;font-family:Orbitron;font-size:7px;letter-spacing:1px;color:#d8b4fe;z-index:11}
+.topLevel{position:absolute;top:1.05%;right:2.8%;width:25.5%;height:29%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:11;}
+.topLevel small{font-family:Orbitron;font-size:5.8px;color:#e9a6ff;letter-spacing:1.2px}
+.topLevel b{font-family:Orbitron;font-size:22px;color:#ffb3ff;line-height:1;margin-top:2px;text-shadow:0 0 10px #ff00ff;font-weight:700}
+.cardNum{position:absolute;top:37.5%;left:5%;font-family:Orbitron;font-size:16.5px;letter-spacing:1.3px;font-weight:700;color:#e9a6ff;z-index:11}
+.r{position:absolute;left:5%;right:27%;display:flex;gap:12px;z-index:11}
+.r1{top:51%}.r2{top:65.5%}.r3{top:80%}
+.f{flex:1;border-bottom:1px solid rgba(200,120,255,.25);padding-bottom:2px}
+.f label{font-family:Orbitron;font-size:5.8px;color:#c77dff;display:block;margin-bottom:2px}
+.f b{font-size:11.5px;color:#d8b4fe;font-weight:600;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.botLevel{position:absolute;bottom:4%;right:2.73%;width:18%;height:18.5%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:11;}
+.botLevel small{font-family:Orbitron;font-size:5px;color:#e9a6ff;letter-spacing:.8px}
+.botLevel b{font-family:Orbitron;font-size:11px;color:#fff;line-height:1;margin-top:1px}
+.quote{position:absolute;bottom:3%;left:8%;right:29%;font-size:4.2px;color:#8b5cf6;opacity:.7;font-style:italic;text-align:center;z-index:11}
+.btns{width:100%;max-width:400px;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.btn{height:50px;border-radius:28px;border:none;font-weight:700;cursor:pointer}
+.dl{background:#7c3aed;color:#fff}.sh{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.info{width:100%;max-width:400px;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.ibox{background:rgba(60,40,110,.5);border-radius:14px;padding:12px;text-align:center}
+</style>
+</head>
+<body>
+<div class="back" onclick="location.href='dashboard.html'">‹ Back to Dashboard</div>
+<div class="title">YOUR AURA CARD</div>
+<div class="cardWrap" id="cap">
+<img class="bg" id="bgImg" src="cyberpunk_blank.png">
+<div class="ov" id="ov"></div>
+</div>
+<div class="info">
+<div class="ibox"><b id="lv">Level 1</b><br><small style="color:#a89bc7">Current Level</small></div>
+<div class="ibox"><b id="ae">0 AE</b><br><small style="color:#a89bc7">Total Aura</small></div>
+</div>
+<div class="btns">
+<button class="btn dl" onclick="downloadCard()">⬇ Download</button>
+<button class="btn sh" onclick="shareCard()">↗ Share</button>
+</div>
+
+<script type="module">
+import { db, doc, getDoc } from "./firebase.js";
+
+let raw = localStorage.getItem('aura_current');
+if(!raw){ location.href='index.html'; }
+let cur = JSON.parse(raw);
+let curName = (cur.name || cur.username || "USER").trim();
+let curUser = (cur.username || cur.email || curName).toLowerCase();
+
+const AURAS = ["Soul Flame","Void Walker","Neon Pulse","Spirit Core","Shadow Veil","Cosmic Ember","Frost Aura","Solar Flare","Abyss Heart","Thunder Soul"];
+const VIBES = ["Neural Drift","Mystic Flow","Dark Pulse","Divine Spark","Phantom Edge","Eternal Rise","Cyber Flow","Aura God","Ghost Trace","Zen Mode"];
+const QUOTES = [
+"\"In the neon dark, I am the signal that cannot be silenced.\"",
+"\"Energy never dies, it transforms into aura.\"",
+"\"I don't follow vibes, I create them.\"",
+"\"Level is just a number, aura is infinite.\"",
+"\"My vibe speaks before I do.\""
+];
+function hash(str){ let h=0; for(let i=0;i<str.length;i++) h = h*31 + str.charCodeAt(i); return Math.abs(h); }
+
+let cardNumber = cur.cardNum || localStorage.getItem('card_num_'+curUser) || "0000 0000 0000 0000";
+let liveStat = {total:0, level:1};
+
+async function getLiveStats(){
+  try{
+    let snap = await getDoc(doc(db, "users", cur.username));
+    if(snap.exists()){
+      let d=snap.data();
+      liveStat = {total:d.total||0, level:d.level||1};
+      cardNumber = d.cardNum || cardNumber;
+    }
+  }catch(e){ console.log(e); }
+  return liveStat;
+}
+
+async function renderCard(){
+  let stat = await getLiveStats();
+  let curTotal = stat.total || 0;
+  let curLevel = stat.level || 1;
+  let h1 = hash(curName);
+  let h2 = hash(curName + curLevel);
+  let userAura = AURAS[(h1 + curLevel) % AURAS.length];
+  let userVibe = VIBES[(h2) % VIBES.length];
+  let userQuote = QUOTES[(h1) % QUOTES.length];
+  let userType="Cyberpunk", styleName="STYLE 01 · CYBERPUNK", bg="cyberpunk_blank.png";
+  if(curUser==='admin'){
+    styleName="STYLE 10 · MYTHIC · ADMIN SPECIAL"; bg="cyberpunk_blank.png";
+    userAura="Eternal Origin"; userType="Mythic"; userVibe="Aura God"; userQuote="\"Beyond levels, I AM aura.\"";
+  } else if(curLevel>=900){ styleName="STYLE 04 · FUTURISTIC"; bg="futuristic_blank.png"; userType="Futuristic"; }
+    else if(curLevel>=600){ styleName="STYLE 03 · DEMON"; bg="demon_blank.png"; userType="Demon"; }
+    else if(curLevel>=300){ styleName="STYLE 02 · LUXURY GOLD"; bg="luxury_blank.png"; userType="Luxury"; }
+
+  let lvlTxt = curLevel>=999? "999+" : curLevel;
+  document.getElementById('bgImg').src = bg;
+  document.getElementById('ov').innerHTML=`
+  <div class="style">${styleName}</div>
+  <div class="topLevel"><small>LEVEL</small><b>${lvlTxt}</b></div>
+  <div class="cardNum">${cardNumber}</div>
+  <div class="r r1"><div class="f"><label>NAME</label><b>${curName.toUpperCase()}</b></div><div class="f"><label>AURA</label><b>${userAura}</b></div></div>
+  <div class="r r2"><div class="f"><label>TYPE</label><b>${userType}</b></div><div class="f"><label>ENERGY</label><b>${curTotal} AE</b></div></div>
+  <div class="r r3"><div class="f" style="border:none"><label>VIBE</label><b>${userVibe}</b></div><div class="f" style="border:none"></div></div>
+  <div class="botLevel"><small>LEVEL</small><b>${lvlTxt}</b></div>
+  <div class="quote">${userQuote}</div>
+  `;
+  document.getElementById('lv').innerText='Level '+curLevel;
+  document.getElementById('ae').innerText=curTotal+' AE';
+}
+
+renderCard();
+setInterval(renderCard, 3000);
+
+window.downloadCard = async function(){ let c=await html2canvas(document.getElementById('cap'),{scale:3,useCORS:true,backgroundColor:null}); let a=document.createElement('a'); a.download=`Aura_${curName}.png`; a.href=c.toDataURL('image/png'); a.click(); }
+window.shareCard = async function(){ let c=await html2canvas(document.getElementById('cap'),{scale:3,useCORS:true,backgroundColor:null}); c.toBlob(async b=>{ let f=new File([b],`Aura_${curName}.png`,{type:'image/png'}); if(navigator.canShare&&navigator.canShare({files:[f]})){ await navigator.share({files:[f],title:'Aura Card'}) } else downloadCard(); },'image/png'); }
+</script>
+</body>
+</html>
