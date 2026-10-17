@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Aura Card</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#080412;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:10px;color:#fff}
+.back{width:100%;max-width:400px;color:#a78bfa;font-size:13px;margin:8px 0;cursor:pointer}
+.title{font-family:Orbitron;letter-spacing:3px;font-size:18px;margin-bottom:12px}
+
+/* ================= CARD BASE (premium layout engine) ================= */
+.cardWrap{width:100%;max-width:400px;position:relative;border-radius:16px;overflow:hidden;background:#000;
+  --u:4px;font-family:var(--fb);color:var(--ink);box-shadow:0 0 30px var(--halo)}
+.cardWrap img.bg{width:100%;height:auto;display:block;position:relative;z-index:1}   /* card ab image ke natural ratio me, crop nahi hoga */
+.ov{position:absolute;inset:0;z-index:10}
+.ov>*{position:absolute}
+
+.style{left:var(--sx);top:var(--sy);transform:translateY(-50%);font-family:var(--fb);font-weight:700;font-size:var(--ssz);
+  letter-spacing:.16em;color:var(--acc);text-shadow:0 0 calc(var(--u)*1.4) var(--glow);white-space:nowrap;}
+
+.topLevel,.botLevel{transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;line-height:1;white-space:nowrap}
+.topLevel{left:var(--lx);top:var(--ly)}
+.botLevel{left:var(--bx);top:var(--by)}
+.topLevel small,.botLevel small{font-family:var(--fb);font-weight:700;letter-spacing:.24em;padding-left:.24em;color:var(--ink);opacity:.92;margin-bottom:calc(var(--u)*.8);text-shadow:0 0 calc(var(--u)*1.2) var(--glow)}
+.topLevel small{font-size:var(--lsm)}.botLevel small{font-size:calc(var(--lsm)*.85)}
+.topLevel b,.botLevel b{font-family:var(--fd);font-weight:700;color:var(--acc);text-shadow:0 0 calc(var(--u)*1.4) var(--glow),0 0 calc(var(--u)*3.4) var(--glow2)}
+.topLevel b{font-size:var(--lvl)}.botLevel b{font-size:var(--blvl)}
+
+.cardNum{left:var(--nx);top:var(--ny);transform:translateY(-50%);font-family:var(--fd);font-weight:700;font-size:var(--nsz);
+  letter-spacing:var(--nls);color:var(--acc);text-shadow:0 0 calc(var(--u)*1.6) var(--glow),0 calc(var(--u)*.3) calc(var(--u)*.3) rgba(0,0,0,.25);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+
+.grid{left:var(--gl);right:var(--gr);top:var(--gt);height:var(--gh);display:grid;
+  grid-template-columns:var(--c1) 1fr;column-gap:var(--gap);grid-template-rows:repeat(3,1fr)}
+.f{position:relative;padding-top:calc(var(--u)*1.2);min-width:0}
+.f::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;
+  background:linear-gradient(90deg,var(--line) 0%,var(--line) 55%,rgba(255,255,255,0) 100%)}
+.f label{display:block;font-family:var(--fb);font-weight:700;font-size:var(--lsz);letter-spacing:.2em;color:var(--lab);line-height:1.2;margin-bottom:calc(var(--u)*.7)}
+.f b{display:block;font-family:var(--fb);font-weight:600;font-size:var(--vsz);line-height:1.2;color:var(--ink);
+  text-shadow:0 1px 3px rgba(0,0,0,.85),0 0 calc(var(--u)*1.6) var(--glow2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.f1 b{letter-spacing:.04em}
+
+.quote{left:var(--qx);top:var(--qy);transform:translate(-50%,-50%);width:78%;text-align:center;font-family:var(--fb);
+  font-weight:500;font-style:italic;font-size:var(--qsz);line-height:1.25;color:var(--ink);opacity:.95;text-shadow:0 1px 3px rgba(0,0,0,.9),0 0 calc(var(--u)*1.2) var(--glow2)}
+
+.btns{width:100%;max-width:400px;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+.btn{height:50px;border-radius:28px;border:none;font-weight:700;cursor:pointer}
+.dl{background:#7c3aed;color:#fff}.sh{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.info{width:100%;max-width:400px;display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.ibox{background:rgba(60,40,110,.5);border-radius:14px;padding:12px;text-align:center}
+
+/* ================= THEMES ================= */
+/* shared layout - cyberpunk, gold, futuristic (aur demon) ke blank ka art same template hai */
+.cardWrap{--ssz:calc(var(--u)*2.15);--lsm:calc(var(--u)*2.2);--lsz:calc(var(--u)*1.75);--vsz:calc(var(--u)*3.2);--qsz:calc(var(--u)*1.95);
+  --fd:Orbitron,Inter,sans-serif;--fb:Inter,sans-serif;
+  --lvl:calc(var(--u)*4.8);--blvl:calc(var(--u)*3.5);--nsz:calc(var(--u)*4.2);--nls:.06em;
+  --sx:5.4%;--sy:6.9%;--lx:84.4%;--ly:16%;--bx:87.9%;--by:86.1%;--nx:7.9%;--ny:40%;
+  --gl:7.9%;--gr:14.1%;--gt:46%;--gh:41.5%;--c1:48.3%;--gap:3.9%;--qx:46.4%;--qy:92.4%}
+
+/* 1. CYBERPUNK - violet neon */
+.theme-cyberpunk{--ink:#f6e6ff;--lab:#c78bff;--acc:#f0b6ff;--glow:rgba(168,85,247,.9);--glow2:rgba(147,51,234,.45);--line:rgba(192,132,252,.65);--halo:rgba(168,85,247,.6)}
+
+/* 2. LUXURY GOLD - gold */
+.theme-gold{--ink:#fbeccb;--lab:#e0b552;--acc:#f6d27f;--glow:rgba(251,191,36,.85);--glow2:rgba(217,119,6,.45);--line:rgba(251,191,36,.65);--halo:rgba(251,191,36,.5)}
+
+/* 3. DEMON - blood red */
+.theme-demon{--ink:#ffe1da;--lab:#ff7b6b;--acc:#ff6552;--glow:rgba(255,60,40,.85);--glow2:rgba(249,115,22,.45);--line:rgba(255,90,70,.65);--halo:rgba(239,68,68,.55)}
+
+/* 4. FUTURISTIC - ice cyan */
+.theme-futuristic{--ink:#eafcff;--lab:#7fd6f0;--acc:#aef4ff;--glow:rgba(34,211,238,.85);--glow2:rgba(8,145,178,.45);--line:rgba(110,200,240,.65);--halo:rgba(34,211,238,.45)}
+</style>
+</head>
+<body>
+<div class="back" onclick="location.href='dashboard.html'">‹ Back to Dashboard</div>
+<div class="title">YOUR AURA CARD</div>
+<div class="cardWrap theme-cyberpunk" id="cap">
+<img class="bg" id="bgImg" src="cyberpunk_blank.png">
+<div class="ov" id="ov"></div>
+</div>
+<div class="info">
+<div class="ibox"><b id="lv">Level 1</b><br><small style="color:#a89bc7">Current Level</small></div>
+<div class="ibox"><b id="ae">0 AE</b><br><small style="color:#a89bc7">Total Aura</small></div>
+</div>
+<div class="btns">
+<button class="btn dl" onclick="downloadCard()">⬇ Download</button>
+<button class="btn sh" onclick="shareCard()">↗ Share</button>
+</div>
+
+<script type="module">
+import { db, doc, getDoc } from "./firebase.js";
+let raw = localStorage.getItem('aura_current');
+if(!raw){ location.href='index.html'; }
+let cur = JSON.parse(raw);
+let curName = (cur.name || cur.username || "USER").trim();
+let curUser = (cur.username || cur.email || curName).toLowerCase();
+const A_PRE = ["Void","Neon","Shadow","Cosmic","Frost","Solar","Abyss","Thunder","Crimson","Lunar","Astral","Ember","Mystic","Storm","Phantom","Velvet","Aether","Nova","Obsidian","Radiant","Silent","Eternal","Prism","Quantum","Dusk","Dawn","Ivory","Onyx","Celestial","Feral","Zenith","Arctic"];
+const A_SUF = ["Flame","Walker","Pulse","Core","Veil","Aura","Flare","Heart","Spirit","Bloom","Surge","Halo","Drift","Crown","Echo","Rift","Spark","Wave","Shade","Fire","Wing","Bolt","Mirage","Tide","Reign","Glow","Blaze","Rush","Wraith","Song","Light","Vortex"];
+const V_PRE = ["Neural","Mystic","Dark","Divine","Phantom","Eternal","Cyber","Ghost","Zen","Savage","Silent","Wild","Cold","Electric","Royal","Rogue","Lucid","Fierce","Stealth","Atomic","Midnight","Golden","Toxic","Gentle","Chaos","Turbo","Hyper","Sonic","Sacred","Rebel","Velvet","Neon"];
+const V_SUF = ["Drift","Flow","Pulse","Spark","Edge","Rise","Mode","Trace","Rush","Wave","Pilot","Hunter","Sage","Rider","Monk","Legend","Heart","Dream","Fury","Samurai","Whisper","Prophet","Nomad","Titan","Ronin","Oracle","Storm","Echo","King","Ninja","Assassin","Wizard"];
+const Q_OPEN = ["My aura speaks before I do","I was born in the glow","Silence is my loudest weapon","I walk where the light bends","Every level is a new flame","I don't follow vibes","Energy never asks permission","I carry the storm inside","Nothing can dim this signal","I rise when the world sleeps","My shadow moves first","Power is calm, not loud","I wear the dark like armor","Every spark remembers me","I'm not lost in the noise","Time bends around my pulse","I was forged, never found","My presence is the plot twist","I move like quiet thunder","Fate is just my warm-up","I don't fade, I evolve","The grind is my gravity","I speak in frequencies","Stars are my witnesses"];
+const Q_CLOSE = ["and the world feels it","and nobody can copy it","and the night remembers","and that is enough","and I never look back","and the dark obeys","and my name echoes","and I burn forever","and the stars lean closer","and legends take notes","and fate steps aside","and the signal stays alive","and I answer to no one","and the glow never leaves","and I make it look easy","and silence listens","and every door opens","and the vibe stays eternal","and I choose the light","and time bows low","and chaos follows me","and I never fade","and the future knows me","and the neon agrees"];
+const AURAS = []; for(const a of A_PRE) for(const b of A_SUF) AURAS.push(a+" "+b);            // 1024
+const VIBES = []; for(const a of V_PRE) for(const b of V_SUF) VIBES.push(a+" "+b);            // 1024
+const QUOTES = ["\"In the neon dark, I am the signal that cannot be silenced.\"","\"Energy never dies, it transforms into aura.\"","\"I don't follow vibes, I create them.\"","\"Level is just a number, aura is infinite.\"","\"My vibe speaks before I do.\""];
+for(const a of Q_OPEN) for(const b of Q_CLOSE) QUOTES.push("\""+a+", "+b+".\"");           // 581 total
+function hash(str){ let h=2166136261; for(let i=0;i<str.length;i++){ h^=str.charCodeAt(i); h=Math.imul(h,16777619); } h^=h>>>13; h=Math.imul(h,0x5bd1e995); h^=h>>>15; return h>>>0; }
+function fmt(n){ n=parseInt(n)||0; if(n>=1000000) return (n/1000000).toFixed(2)+'M'; if(n>=1000) return (n/1000).toFixed(1)+'K'; return n.toLocaleString(); }
+let cardNumber = cur.cardNum || localStorage.getItem('card_num_'+curUser) || "0000 0000 0000 0000";
+let liveStat = {total:0, level:1};
+async function getLiveStats(){
+  try{
+    let snap = await getDoc(doc(db, "users", cur.username));
+    if(snap.exists()){
+      let d=snap.data();
+      liveStat = {total:d.total||0, level:d.level||1};
+      cardNumber = d.cardNum || cardNumber;
+    }
+  }catch(e){}
+  return liveStat;
+}
+async function renderCard(){
+  let stat = await getLiveStats();
+  let curTotal = stat.total || 0;
+  let curLevel = stat.level || 1;
+  let seed = curUser; // har user ka unique username -> fixed aura/vibe/quote
+  let userAura = AURAS[hash(seed+"|aura") % AURAS.length];
+  let userVibe = VIBES[hash(seed+"|vibe") % VIBES.length];
+  let userQuote = QUOTES[hash(seed+"|quote") % QUOTES.length];
+
+  let userType="Cyberpunk", styleName="STYLE 01 · CYBERPUNK", bg="cyberpunk_blank.png", theme="theme-cyberpunk";
+
+  if(curUser==='admin'){
+    styleName="STYLE 10 · MYTHIC · ADMIN"; bg="cyberpunk_blank.png"; theme="theme-cyberpunk";
+    userAura="Eternal Origin"; userType="Mythic"; userVibe="Aura God"; userQuote="\"Beyond levels, I AM aura.\"";
+  } else if(curLevel>=900){
+    styleName="STYLE 04 · FUTURISTIC"; bg="futuristic_blank.png"; userType="Futuristic"; theme="theme-futuristic";
+  } else if(curLevel>=600){
+    styleName="STYLE 03 · DEMON"; bg="demon_blank.png"; userType="Demon"; theme="theme-demon";
+  } else if(curLevel>=300){
+    styleName="STYLE 02 · LUXURY GOLD"; bg="gold_blank.png"; userType="Luxury"; theme="theme-gold";
+  }
+
+  let lvlTxt = curLevel>=999? "999+" : curLevel;
+  let aeTxt = fmt(curTotal)+' AE';
+  let wrap = document.getElementById('cap');
+  wrap.className = 'cardWrap '+theme;
+  wrap.style.setProperty('--u', (wrap.clientWidth/100)+'px');
+  document.getElementById('bgImg').src = bg;
+
+  document.getElementById('ov').innerHTML=`
+  <div class="style">${styleName}</div>
+  <div class="topLevel"><small>LEVEL</small><b>${lvlTxt}</b></div>
+  <div class="cardNum">${cardNumber}</div>
+  <div class="grid">
+    <div class="f f1"><label>NAME</label><b>${curName.toUpperCase()}</b></div>
+    <div class="f f2"><label>AURA</label><b>${userAura}</b></div>
+    <div class="f f3"><label>TYPE</label><b>${userType}</b></div>
+    <div class="f f4"><label>ENERGY</label><b>${aeTxt}</b></div>
+    <div class="f f5"><label>VIBE</label><b>${userVibe}</b></div>
+  </div>
+  <div class="botLevel"><small>LEVEL</small><b>${lvlTxt}</b></div>
+  <div class="quote">${userQuote}</div>
+  `;
+  document.getElementById('lv').innerText='Level '+ (curLevel>=10000? fmt(curLevel) : curLevel);
+  document.getElementById('ae').innerText=aeTxt;
+}
+renderCard();
+setInterval(renderCard, 3000);
+window.addEventListener('resize', ()=>{ let w=document.getElementById('cap'); w.style.setProperty('--u',(w.clientWidth/100)+'px'); });
+window.downloadCard = async function(){ let c=await html2canvas(document.getElementById('cap'),{scale:3,useCORS:true,backgroundColor:null}); let a=document.createElement('a'); a.download=`Aura_${curName}.png`; a.href=c.toDataURL('image/png'); a.click(); }
+window.shareCard = async function(){ let c=await html2canvas(document.getElementById('cap'),{scale:3,useCORS:true,backgroundColor:null}); c.toBlob(async b=>{ let f=new File([b],`Aura_${curName}.png`,{type:'image/png'}); if(navigator.canShare&&navigator.canShare({files:[f]})){ await navigator.share({files:[f],title:'Aura Card'}) } else downloadCard(); },'image/png'); }
+</script>
+</body>
+</html>
