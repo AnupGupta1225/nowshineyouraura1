@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Login</title>
+<style>
+  :root{
+    --bg:#f3f4f6; --card:#ffffff; --text:#14161a; --muted:#6b7280;
+    --line:#d7dae0; --accent:#3b2fd9; --accent-text:#ffffff; --err:#c62828;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0e1013; --card:#171a1f; --text:#eef0f3; --muted:#9aa1ad;
+      --line:#2b3038; --accent:#7b73ff; --accent-text:#0e1013; --err:#ff6b6b;
+    }
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    display:flex; align-items:center; justify-content:center; padding:20px;
+  }
+  .card{
+    width:100%; max-width:380px; background:var(--card);
+    border:1px solid var(--line); border-radius:14px; padding:28px;
+  }
+  h1{font-size:22px; margin:0 0 4px}
+  p.sub{margin:0 0 22px; color:var(--muted); font-size:14px}
+  label{display:block; font-size:13px; margin:14px 0 6px; color:var(--muted)}
+  input{
+    width:100%; padding:12px 14px; font-size:16px; color:var(--text);
+    background:transparent; border:1px solid var(--line); border-radius:8px;
+  }
+  input:focus-visible,button:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+  button{
+    width:100%; margin-top:22px; padding:13px; font-size:16px; font-weight:600;
+    background:var(--accent); color:var(--accent-text);
+    border:0; border-radius:8px; cursor:pointer;
+  }
+  button:disabled{opacity:.6; cursor:wait}
+  #info{margin-top:14px; min-height:20px; font-size:13px; color:var(--muted)}
+  #info.error{color:var(--err)}
+</style>
+</head>
+<body>
+  <main class="card">
+    <h1>Admin sign in</h1>
+    <p class="sub">Sirf authorised admins ke liye.</p>
+
+    <form id="form" novalidate>
+      <label for="u">Email</label>
+      <input id="u" type="email" autocomplete="username" placeholder="admin@aura.io">
+
+      <label for="p">Password</label>
+      <input id="p" type="password" autocomplete="current-password" placeholder="Password">
+
+      <button id="btn" type="submit">Sign in</button>
+    </form>
+    <div id="info" role="status" aria-live="polite"></div>
+  </main>
+
+<script type="module">
+import { auth } from "./firebase.js";
+import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+const form = document.getElementById('form');
+const btn  = document.getElementById('btn');
+const info = document.getElementById('info');
+
+function show(msg, isError = false){
+  info.textContent = msg;
+  info.classList.toggle('error', isError);
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById('u').value.trim();
+  const password = document.getElementById('p').value; // trim nahi
+
+  if(!email || !password){
+    show('Email aur password dono daalo.', true);
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Checking...';
+  show('Verifying...');
+
+  try{
+    await signInWithEmailAndPassword(auth, email, password);
+    show('Success! Redirecting...');
+    location.href = 'admin.html';
+  }catch(err){
+    console.error(err);
+    show('Invalid email ya password.', true);
+    btn.disabled = false;
+    btn.textContent = 'Sign in';
+  }
+});
+</script>
+</body>
+</html>
