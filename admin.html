@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aura Admin - Secure</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#070311;color:#fff;font-family:Inter;min-height:100vh;display:flex}
+.sidebar{width:280px;background:linear-gradient(180deg,#1d103d,#0f0824);border-right:1px solid rgba(168,85,247,.2);padding:20px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.menu button{width:100%;text-align:left;padding:12px 14px;border-radius:14px;border:1px solid transparent;background:transparent;color:#9ca3af;cursor:pointer;display:flex;gap:10px;align-items:center;font-size:13px;margin-bottom:6px}
+.menu button.active{background:rgba(168,85,247,.25);color:#fff;border-color:rgba(168,85,247,.4)}
+.main{flex:1;padding:12px;overflow-x:hidden;max-width:100vw}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.card{background:linear-gradient(145deg,rgba(32,16,64,.9),rgba(20,10,42,.95));border:1px solid rgba(168,85,247,.22);border-radius:20px;padding:16px;overflow:hidden}
+.card b{font-family:Orbitron;font-size:20px;display:block;word-break:break-all}
+.grid{display:grid;grid-template-columns:1.7fr .9fr;gap:14px}
+.input{background:#120a2a;border:1px solid rgba(76,29,149,.5);border-radius:12px;padding:12px 14px;color:#fff;width:100%;font-size:14px;margin-bottom:10px;outline:none}
+.input:focus{border-color:#a855f7}
+.btn{height:36px;padding:0 14px;border-radius:10px;border:1px solid rgba(76,29,149,.6);background:#1a1033;color:#d8b4fe;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.btn.p{background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;border:none}
+.badge{padding:5px 10px;border-radius:20px;font-size:10px;font-weight:700}
+.act{background:rgba(34,197,94,.15);color:#86efac}
+.lock{background:rgba(239,68,68,.15);color:#fca5a5}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;z-index:100;padding:12px}
+.modal.show{display:flex}
+.modalBox{background:#1a1033;border:1px solid rgba(168,85,247,.5);border-radius:20px;padding:20px;width:100%;max-width:520px;max-height:92vh;overflow:auto}
+.userItem{background:#120a2a;border:1px solid rgba(168,85,247,.15);border-radius:18px;padding:14px;margin-bottom:12px}
+.adminCardBox{padding:0!important;overflow:hidden}
+.adminCardBox img{width:100%;display:block;border-bottom:1px solid rgba(168,85,247,.2)}
+.downloadBtn{width:100%;height:48px;border-radius:14px;background:linear-gradient(135deg,#a855f7,#7c3aed);border:none;color:#fff;font-family:Orbitron;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px}
+@media(max-width:900px){body{flex-direction:column}.sidebar{width:100%;height:auto;position:relative}.main{padding:10px}.cards{grid-template-columns:1fr}.grid{grid-template-columns:1fr}table{display:none}}
+.taskGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+</style>
+</head>
+<body>
+<div class="sidebar">
+<div style="font-family:Orbitron;color:#a78bfa;font-weight:700">◈ AURA ADMIN</div>
+<div class="menu" style="margin-top:14px">
+<button class="active"><i class="fa fa-table"></i> Dashboard</button>
+<button onclick="document.getElementById('userSec').scrollIntoView({behavior:'smooth'})"><i class="fa fa-users"></i> User List</button>
+<button onclick="document.getElementById('taskSec').scrollIntoView({behavior:'smooth'})"><i class="fa fa-tasks"></i> Tasks</button>
+</div>
+<div style="margin-top:auto;border-top:1px solid rgba(76,29,149,.3);padding-top:12px;display:flex;gap:8px;align-items:center">
+<div style="width:32px;height:32px;background:#7c3aed;border-radius:50%;display:grid;place-items:center"><i class="fa fa-user"></i></div>
+<div><b id="sideName" style="font-size:12px">Admin</b><br><small id="sideEmail" style="color:#9ca3af;font-size:10px">loading</small></div>
+<button onclick="logout()" style="margin-left:auto;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3);color:#fca5a5;padding:6px 10px;border-radius:8px"><i class="fa fa-right-from-bracket"></i></button>
+</div>
+</div>
+
+<div class="main">
+<div class="cards">
+<div class="card"><small style="color:#9ca3af"><i class="fa fa-users"></i> Total Users</small><b id="tUsers">0</b></div>
+<div class="card"><small style="color:#9ca3af"><i class="fa fa-bolt"></i> Aura Distributed</small><b id="tAura">0 / 50k</b><div style="height:8px;background:#1a1033;border-radius:10px;margin-top:10px;overflow:hidden"><div id="bar" style="height:100%;background:linear-gradient(90deg,#a855f7,#ec4899);width:0%"></div></div></div>
+<div class="card"><small style="color:#9ca3af"><i class="fa fa-layer-group"></i> Tasks & Requests</small><b><span id="tt">0</span> Tasks • <span id="reqCount">0</span> Req</b></div>
+</div>
+
+<div class="grid">
+<div>
+<div class="card" id="userSec"><h3 style="font-family:Orbitron;font-size:14px">User List - Secure</h3>
+<div id="userListMobile" style="margin-top:12px"></div>
+<table style="margin-top:12px;width:100%;border-collapse:collapse"><thead><tr><th style="font-size:10px;color:#c4b5fd;padding:10px;text-align:left">USER</th><th style="font-size:10px;color:#c4b5fd;padding:10px;text-align:left">EMAIL</th><th style="font-size:10px;color:#c4b5fd;padding:10px;text-align:left">AE</th><th style="font-size:10px;color:#c4b5fd;padding:10px">ACT</th></tr></thead><tbody id="tbody"></tbody></table>
+</div>
+
+<div class="card" id="taskSec" style="margin-top:14px"><h3 style="font-family:Orbitron;font-size:14px">📝 Task Management</h3><div style="margin-top:12px"><div class="taskGrid"><input id="taskTitle" class="input" placeholder="Title *"><input id="taskAE" type="number" class="input" placeholder="AE *"></div><input id="taskDesc" class="input" placeholder="Description"><div class="taskGrid"><select id="taskLevel" class="input"><option value="1">Lvl 1+ (All Users)</option><option value="300">Lvl 300+</option><option value="600">Lvl 600+</option></select><input id="taskLink" class="input" placeholder="Task Link"></div><button class="btn p" style="width:100%;height:46px;justify-content:center;font-family:Orbitron" onclick="addTask()"><i class="fa fa-plus"></i> Add New Task</button></div><div id="taskList" style="margin-top:14px"></div></div>
+</div>
+
+<div>
+<div class="card"><h3 style="font-family:Orbitron;font-size:14px"><i class="fa fa-coins"></i> Aura Pool</h3><div style="background:#120a2a;border-radius:14px;padding:14px;margin-top:10px"><b>50,000 AE Pool</b><br><small style="color:#9ca3af">Distributed:</small><b id="dist" style="color:#a78bfa;display:block;font-size:20px">0</b><small style="color:#9ca3af">Remaining: <span id="rem">0</span></small></div></div>
+
+<div class="card adminCardBox" id="auraCardSec" style="margin-top:14px;border:1px solid #a855f7">
+<div style="padding:16px"><h3 style="font-family:Orbitron;font-size:14px">Admin Aura Card</h3><small style="color:#9ca3af">Official Card • 0000 0000 9999 0001</small></div>
+<img src="admin_card.jpg" id="adminCardImg" alt="Admin Card" onerror="this.src='https://via.placeholder.com/600x400/1a1033/a78bfa?text=ADMIN+CARD'">
+<div style="padding:12px">
+<button class="downloadBtn" onclick="downloadCard()"><i class="fa-solid fa-download"></i> DOWNLOAD CARD</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="editModal" class="modal"><div class="modalBox">
+<h3 style="font-family:Orbitron">Edit User</h3>
+<div style="margin-top:14px">
+<label style="font-size:10px;color:#c4b5fd">FULL NAME</label><input id="eName" class="input">
+<label style="font-size:10px;color:#c4b5fd">USERNAME</label><input id="eUsername" class="input" disabled style="opacity:.6">
+<label style="font-size:10px;color:#c4b5fd">EMAIL</label><input id="eEmail" class="input">
+<div class="taskGrid"><div><label style="font-size:10px;color:#c4b5fd">TOTAL AE</label><input id="eTotal" type="number" class="input"></div><div><label style="font-size:10px;color:#c4b5fd">LEVEL</label><input id="eLevel" type="number" class="input"></div></div>
+<label style="font-size:10px;color:#c4b5fd">STATUS</label><select id="eLocked" class="input"><option value="false">Active</option><option value="true">Locked</option></select>
+<div style="display:flex;gap:10px;margin-top:10px"><button class="btn" style="flex:1;height:44px;justify-content:center" onclick="closeModal()">Cancel</button><button class="btn p" style="flex:1;height:44px;justify-content:center" onclick="saveFullUser()">Save All</button></div>
+</div></div></div>
+
+<script type="module">
+import { db, auth, doc, getDocs, setDoc, updateDoc, deleteDoc, collection } from "./firebase.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+let usersCache=[], tasksCache=[], editingUser=null;
+
+onAuthStateChanged(auth, (user)=>{
+  if(!user || user.email !== 'admin@aura.io'){ location.href='admin-login.html'; return; }
+  sideEmail.innerText=user.email;
+  render();
+});
+
+function fmt(n){ if(n>=1000000) return (n/1000000).toFixed(2)+'M'; if(n>=1000) return (n/1000).toFixed(1)+'K'; return n||0; }
+
+async function loadAll(){ 
+  let u=await getDocs(collection(db,"users")); usersCache=[]; u.forEach(d=>usersCache.push(d.data())); 
+  let t=await getDocs(collection(db,"tasks")); tasksCache=[]; t.forEach(d=>tasksCache.push(d.data())); 
+}
+
+async function render(){ 
+  await loadAll(); 
+  let total=usersCache.reduce((a,b)=>a+(b.total||0),0); 
+  tUsers.innerText=usersCache.length; 
+  tAura.innerText=fmt(total)+' / 50,000'; 
+  bar.style.width=Math.min(100,total/500)+'%'; 
+  dist.innerText=total.toLocaleString(); 
+  rem.innerText=(50000-total).toLocaleString(); 
+  tt.innerText=tasksCache.filter(x=>x.active).length;
+
+  tbody.innerHTML=usersCache.map(u=>`<tr><td><b>${u.name||'-'}</b><br><small>@${u.username} Lvl ${u.level||1}</small></td><td style="word-break:break-all">${u.email||'-'}</td><td>${fmt(u.total||0)}</td><td><button class="btn" onclick="openEdit('${u.username}')"><i class="fa fa-pen"></i></button></td></tr>`).join('')||'<tr><td colspan=4>No users</td></tr>';
+
+  document.getElementById('userListMobile').innerHTML=usersCache.map(u=>`<div class="userItem" style="background:#120a2a;border:1px solid rgba(168,85,247,.15);border-radius:18px;padding:14px;margin-bottom:12px"><b>${u.name||'-'}</b> @${u.username}<br><small>${u.email||'-'} • ${u.total||0} AE</small><div style="margin-top:8px;display:flex;gap:6px"><button class="btn" onclick="openEdit('${u.username}')">Edit</button><button class="btn" style="color:#ef4444" onclick="delUser('${u.username}')">Delete</button></div></div>`).join('');
+
+  taskList.innerHTML=tasksCache.slice().reverse().map(t=>`<div style="background:#120a2a;padding:12px;border-radius:12px;margin-bottom:8px;display:flex;justify-content:space-between"><div><b>${t.title||t.t}</b><br><small>${t.desc||''} • ${t.ae||t.xp} AE</small></div><div style="display:flex;gap:6px"><button class="btn" onclick="toggleTask('${t.id}')">${t.active?'Pause':'Play'}</button><button class="btn" style="color:#ef4444" onclick="deleteTask('${t.id}')">Del</button></div></div>`).join('')||'<small>No tasks</small>';
+}
+
+window.openEdit=(un)=>{ let u=usersCache.find(x=>x.username===un); if(!u) return; editingUser=un; eName.value=u.name||''; eUsername.value=u.username||''; eEmail.value=u.email||''; eTotal.value=u.total||0; eLevel.value=u.level||1; eLocked.value=String(!!u.locked); editModal.classList.add('show'); }
+window.closeModal=()=>editModal.classList.remove('show');
+window.saveFullUser=async()=>{ await updateDoc(doc(db,"users",editingUser), {name:eName.value.trim(),email:eEmail.value.trim(),total:parseInt(eTotal.value)||0,level:parseInt(eLevel.value)||1,locked:eLocked.value==='true'}); closeModal(); render(); }
+window.delUser=async(un)=>{ if(confirm('Delete '+un+' ?')){ await deleteDoc(doc(db,"users",un)); render(); } }
+window.addTask=async()=>{ let title=taskTitle.value.trim(),ae=parseInt(taskAE.value); if(!title||!ae) return alert('Title aur AE bharo'); let id=Date.now(); await setDoc(doc(db,"tasks",String(id)), {id,title,t:title,desc:taskDesc.value.trim()||'Complete this task',ae,xp:ae,level:parseInt(taskLevel.value),link:taskLink.value.trim(),active:true}); taskTitle.value=''; taskAE.value=''; render(); }
+window.deleteTask=async id=>{ await deleteDoc(doc(db,"tasks",String(id))); render(); }
+window.toggleTask=async id=>{ let t=tasksCache.find(x=>String(x.id)===String(id)); await updateDoc(doc(db,"tasks",String(id)), {active:!t.active}); render(); }
+window.downloadCard=()=>{ const a=document.createElement('a'); a.href=document.getElementById('adminCardImg').src; a.download='AURA-ADMIN-CARD.jpg'; document.body.appendChild(a); a.click(); document.body.removeChild(a); }
+window.logout=async()=>{ await signOut(auth); localStorage.removeItem('aura_current'); location.href='admin-login.html'; }
+</script>
+</body>
+</html>
